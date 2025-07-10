@@ -1,57 +1,48 @@
-resource "aws_security_group" "web" {
-  name        = "${var.env}-web-sg"
-  description = "Allow HTTP and SSH traffic"
-  vpc_id      = var.vpc_id
-
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.trusted_ips
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.env}-web-sg"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
   }
 }
 
-resource "aws_security_group" "db" {
-  name        = "${var.env}-db-sg"
-  description = "Allow MySQL traffic from web servers"
-  vpc_id      = var.vpc_id
+provider "aws" {
+  region = var.region
+}
 
-  ingress {
-    description     = "MySQL"
-    from_port       = 3306
-    to_port         = 3306
-    protocol        = "tcp"
-    security_groups = [aws_security_group.web.id]
-  }
+module "network" {
+  source          = "./modules/network"
+  env             = var.env
+  vpc_cidr        = var.vpc_cidr
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
+  region          = var.region
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+module "security" {
+  source     = "./modules/security"
+  env        = var.env
+  vpc_id     = module.network.vpc_id
+  trusted_ips = var.trusted_ips
+}
 
-  tags = {
-    Name = "${var.env}-db-sg"
-  }
+module "compute" {
+  source           = "./modules/compute"
+  env              = var.env
+  public_subnet_ids = module.network.public_subnet_ids
+  web_sg_id        = module.security.web_sg_id
+  key_name         = var.key_name
+  instance_type    = var.instance_type
+}
+
+module "database" {
+  source            = "./modules/database"
+  env               = var.env
+  private_subnet_ids = module.network.private_subnet_ids
+  db_sg_id          = module.security.db_sg_id
+  db_name           = var.db_name
+  db_username       = var.db_username
+  db_password       = var.db_password
+  db_instance_class = var.db_instance_class
 }
