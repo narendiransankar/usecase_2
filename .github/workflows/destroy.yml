@@ -21,7 +21,7 @@ jobs:
          aws-region: ap-south-1
          
      - name: Terraform Init
-       run: terraform plan
+       run: terraform init -reconfigure
        # run: |
        #    terraform init \
        #      -backend-config="bucket=hcl-test-backend-state" \
