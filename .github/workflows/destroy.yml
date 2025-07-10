@@ -23,8 +23,8 @@ jobs:
      - name: Terraform Init
        run: |
           terraform init \
-            -backend-config="bucket=your-terraform-state-bucket" \
-            -backend-config="key=path/to/terraform.tfstate" \
+            -backend-config="bucket=hcl-test-backend-state" \
+            -backend-config="key=usecase2//to/terraform.tfstate" \
             -backend-config="region=ap-south-1" \
             -backend-config="encrypt=true" 
         
