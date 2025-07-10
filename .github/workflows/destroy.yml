@@ -21,12 +21,13 @@ jobs:
          aws-region: ap-south-1
          
      - name: Terraform Init
-       run: |
-          terraform init \
-            -backend-config="bucket=hcl-test-backend-state" \
-            -backend-config="key=usecase2//to/terraform.tfstate" \
-            -backend-config="region=ap-south-1" \
-            -backend-config="encrypt=true" 
+       run: terraform plan
+       # run: |
+       #    terraform init \
+       #      -backend-config="bucket=hcl-test-backend-state" \
+       #      -backend-config="key=usecase2//to/terraform.tfstate" \
+       #      -backend-config="region=ap-south-1" \
+       #      -backend-config="encrypt=true" 
         
      - name: Terraform destroy
        id: destroy
