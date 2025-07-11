@@ -8,5 +8,5 @@ variable "sg_name" {
 }
 variable "vpc_id" {
   description = "List of CIDR blocks for vpc"
-  type        = List
+  type        = list
 }
