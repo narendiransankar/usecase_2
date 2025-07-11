@@ -1,6 +1,6 @@
 resource "aws_security_group" "eks-sg" {
   name   = var.sg_name
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc_id
 }
 
 resource "aws_security_group_rule" "eks-sg-ingress" {
