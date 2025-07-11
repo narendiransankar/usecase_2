@@ -2,7 +2,7 @@
 
 variable "sg_name" {
   description = "sg names"
-  type        = list
+  type        = string
   default    = "security_group_eks"
 
 }
