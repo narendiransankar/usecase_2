@@ -10,7 +10,7 @@ resource "aws_db_subnet_group" "this" {
 resource "aws_db_instance" "this" {
   identifier             = "${var.env}-mysql"
   engine                = "mysql"
-  engine_version        = "5.7"
+  engine_version        = "8.0.41"
   instance_class        = var.db_instance_class
   allocated_storage     = 20
   storage_type          = "gp2"
