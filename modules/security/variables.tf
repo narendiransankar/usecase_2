@@ -11,5 +11,5 @@ variable "vpc_id" {
 variable "trusted_ips" {
   description = "List of trusted IPs for SSH access"
   type        = list(string)
-  default     = ["0.0.0.0/0"] # Restrict this in production
+  default     = ["0.0.0.0/0"]
 }
