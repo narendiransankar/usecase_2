@@ -1,21 +1,8 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"] # Canonical
 
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
 
 resource "aws_instance" "web" {
   count         = length(var.public_subnet_ids)
-  ami           = data.aws_ami.ubuntu.id
+  ami           = "ami-020cba7c55df1f615"
   instance_type = var.instance_type
   subnet_id     = var.public_subnet_ids[count.index]
   vpc_security_group_ids = [var.web_sg_id]
